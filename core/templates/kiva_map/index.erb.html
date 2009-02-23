@@ -3,7 +3,9 @@
 <head>
   <title>KivaMap - Kiva entrepreneurs in the world</title>
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-  <%= this.css_include_tag(:application) %>
+  <style type="text/css" media="all">
+    @import url('kiva_map.css');
+  </style>
   <script src="http://www.google.com/jsapi?key=ABQIAAAAdF3Z4Y2-c9myQDFWbid1ORSmbtbI58sJnUq1AueY0BvTVoVv3BQWSfqCLuu5jNIZQd2EpeIki2q27w"></script>
   <script type="text/javascript" charset="utf-8">
     var data = <%= loans.to_json %>;
@@ -15,8 +17,7 @@
       });
     });
   </script>
-  <%= this.js_include_tag(:application, :corners) %>
-  <!-- <script type="text/javascript" src="application.js"></script> -->
+  <script type="text/javascript" src="kiva_map.js"></script>
 </head>
 <body>
   <div id="info" class="box"><!--O info-->

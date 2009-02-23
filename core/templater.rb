@@ -4,32 +4,37 @@ module Kiva
   class Templater
     public # PUBLIC instance methods
     
-    attr_reader :page
+    attr_reader :files
     
-    def css_include_tag(*files)
-      css = "<style type=\"text/css\" media=\"all\">\n"
-      files.each do |file|
-        css << File.read(path("#{file}.css"))
-      end
-      css << "\n</style>"
+    def generate_css_file
+      generate_file('css')
+    end
+    
+    def generate_js_file
+      generate_file('js')
     end
     
     def initialize(type, params={})
-      @type = type.to_s
-      @page = Erubis::Eruby.new(File.read(path('index.erb.html'))).result(params.merge(:this => self))
+      @type  = type.to_s
+      page   = Erubis::Eruby.new(File.read(path('index.erb.html'))).result(params.merge(:this => self))
+      @files = [{:name => 'index.html',   :content => page},
+                {:name => 'kiva_map.css', :content => generate_css_file},
+                {:name => 'kiva_map.js',  :content => generate_js_file}]
     end
-    
-    def js_include_tag(*files)
-      js = "<script type=\"text/javascript\">\n"
-      files.each do |file|
-        js << File.read(path("#{file}.js"))
-      end
-      js << "\n</script>"
-    end
-    
+
     private # PRIVATE instance methods
-          
-    def path(file)
+    
+    def generate_file(ext='css')
+      merged = ''
+      Dir.glob(File.join(path, "*.#{ext}")).each do |file|
+        merged << "/* === #{File.basename(file)} === */\n\n"
+        merged << File.read(file)
+        merged << "\n\n"
+      end
+      merged
+    end
+    
+    def path(file='')
       File.join(File.expand_path(File.dirname(__FILE__)), 'templates', @type, file)
     end
   end # Templater
