@@ -1,5 +1,5 @@
 require 'open-uri'
-require 'json/pure'
+require 'json'
 
 module Kiva
   module Fetcher
