@@ -4,7 +4,7 @@ module Kiva
   class Templater
     public # PUBLIC instance methods
     
-    attr_reader :files
+    attr_reader :page, :files
     
     def generate_css_file
       generate_file('css')
@@ -16,8 +16,8 @@ module Kiva
     
     def initialize(type, params={})
       @type  = type.to_s
-      page   = Erubis::Eruby.new(File.read(path('index.erb.html'))).result(params.merge(:this => self))
-      @files = [{:name => 'index.html',   :content => page},
+      @page  = Erubis::Eruby.new(File.read(path('index.erb.html'))).result(params.merge(:this => self))
+      @files = [{:name => 'index.html',   :content => @page},
                 {:name => 'kiva_map.css', :content => generate_css_file},
                 {:name => 'kiva_map.js',  :content => generate_js_file}]
     end

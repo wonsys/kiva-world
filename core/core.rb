@@ -46,16 +46,20 @@ loans = {'fundraising'  => Kiva.fetch(:loans, :fundraising),
          'in_repayment' => Kiva.fetch(:loans, :in_repayment),
          'paid'         => Kiva.fetch(:loans, :paid)} # 'defaulted'    => Kiva.fetch(:loans, :defaulted)
 
-files = Kiva::Templater.new(type, :loans => loans).files
-
-puts 'Writing file for kiva map...'
-files.each do |file|
-  File.open(File.join(root, type.to_s, 'public', file[:name]), 'w+') do |f|
-    f.flock(File::LOCK_EX)
-    f.write(file[:content])
-  end
+page = Kiva::Templater.new(type, :loans => loans).page
+puts 'Writing files for kiva map...'
+File.open(File.join(root, type.to_s, 'public', 'index.html'), 'w+') do |f|
+  f.flock(File::LOCK_EX)
+  f.write(page)
 end
-
 puts 'Kiva Map regenerated!'
+
+# files = Kiva::Templater.new(type, :loans => loans).files
+# files.each do |file|
+#   File.open(File.join(root, type.to_s, 'public', file[:name]), 'w+') do |f|
+#     f.flock(File::LOCK_EX)
+#     f.write(file[:content])
+#   end
+# end
 
 # kiva people
