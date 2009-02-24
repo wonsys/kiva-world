@@ -1,0 +1,15 @@
+.DS_Store
+log/*
+tmp/*
+TAGS
+*~
+.#*
+*.sqlite
+*.sqlite3
+*.db
+.hgignore
+.hg/*
+.svn/*
+.bzr/*
+kiva_map/public/**/*
+kiva_people/public/**/*
