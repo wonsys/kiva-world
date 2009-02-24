@@ -1,40 +1,48 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en">
-<head>
-  <title>KivaMap - Kiva entrepreneurs in the world</title>
-  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-  <style type="text/css" media="all">
-    @import url('kiva_map.css');
-  </style>
-  <script src="http://www.google.com/jsapi?key=ABQIAAAAdF3Z4Y2-c9myQDFWbid1ORSI5xQXRf0uWovlDekgACrwxp4OWhR4tibiINrpBZcnA-5Upqihn7hczQ"></script>
-  <script type="text/javascript" charset="utf-8">
-    var data = <%= loans.to_json %>;
-    google.load('jquery', '1.3.1');
-    google.setOnLoadCallback(function(){
-      $(document).ready(function(){
-        $('.box').corners("15px");
-        initialize(data);
+  <head>
+    <title>KivaMap - Kiva entrepreneurs in the world</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <style type="text/css" media="all">
+      @import url('kiva_map.css');
+    </style>
+    <script src="http://www.google.com/jsapi?key=ABQIAAAAdF3Z4Y2-c9myQDFWbid1ORSI5xQXRf0uWovlDekgACrwxp4OWhR4tibiINrpBZcnA-5Upqihn7hczQ"></script>
+    <script type="text/javascript" charset="utf-8">
+      var data = <%= loans.to_json %>;
+      google.load('jquery', '1.3.2');
+      google.setOnLoadCallback(function(){
+        $(document).ready(function(){
+          $('.box').corners("15px");
+          initialize(data);
+        });
       });
-    });
-  </script>
-  <script type="text/javascript" src="kiva_map.js"></script>
-</head>
-<body>
-  <div id="info" class="box"><!--O info-->
-    <a href="http://wonsys.net" title="Wonsys S.r.l. Home page" target="_blank" id="wonsys">Wonsys S.r.l.</a>
-    <a href="http://www.kiva.org" title="Kiva.org Home page" target="_blank" id="logo"><img src="kiva_map.png" alt="Kiva" /></a>
-    <h1>Kiva Map</h1>
-    <p>Please visit and contribute to <a href="http://www.kiva.org" title="Kiva.org Home page" target="_blank">Kiva.org</a></p>
-  </div><!--C info-->
-  <div id="legend" class="box"><!--O legend-->
-    <h2>Legend<span>*results are limited to 100 most recent loans</span></h2>
-    <ul>
-      <li class="green"><input type="radio" name="fundraising" checked="checked" onclick="uncheckAllRadioInputsUnless(this); showLoans('fundraising'); return true;">Fundraising</li>
-      <li class="blue"><input type="radio" name="funded" onclick="uncheckAllRadioInputsUnless(this); showLoans('funded'); return true;">Funded</li>
-      <li class="yellow"><input type="radio" name="in_repayment" onclick="uncheckAllRadioInputsUnless(this); showLoans('in_repayment'); return true;">In repayment</li>
-      <li class="orange"><input type="radio" name="paid" onclick="uncheckAllRadioInputsUnless(this); showLoans('paid'); return true;">Paid</li>
-    </ul>
-  </div><!--C legend-->
-  <div id="map"></div><!--OC map-->
-</body>
+    </script>
+    <script type="text/javascript" src="kiva_map.js"></script>
+  </head>
+  <body>
+    <div id="info" class="box"><!--O info-->
+      <a href="http://wonsys.net" title="Wonsys S.r.l. Home page" target="_blank" id="wonsys">Wonsys S.r.l.</a>
+      <a href="http://www.kiva.org" title="Kiva.org Home page" target="_blank" id="logo"><img src="kiva_map.png" alt="Kiva" /></a>
+      <h1>Kiva Map</h1>
+      <p>Please visit and contribute to <a href="http://www.kiva.org" title="Kiva.org Home page" target="_blank">Kiva.org</a></p>
+    </div><!--C info-->
+    <div id="legend" class="box"><!--O legend-->
+      <h2>Legend<span>*results are limited to 100 most recent loans</span></h2>
+      <ul>
+        <li class="green"><input type="radio" name="fundraising" checked="checked" onclick="uncheckAllRadioInputsUnless(this); showLoans('fundraising'); return true;">Fundraising</li>
+        <li class="blue"><input type="radio" name="funded" onclick="uncheckAllRadioInputsUnless(this); showLoans('funded'); return true;">Funded</li>
+        <li class="yellow"><input type="radio" name="in_repayment" onclick="uncheckAllRadioInputsUnless(this); showLoans('in_repayment'); return true;">In repayment</li>
+        <li class="orange"><input type="radio" name="paid" onclick="uncheckAllRadioInputsUnless(this); showLoans('paid'); return true;">Paid</li>
+      </ul>
+    </div><!--C legend-->
+    <div id="map"></div><!--OC map-->
+    <script type="text/javascript">
+      var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+      document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+      try {
+        var pageTracker = _gat._getTracker("UA-563229-7");
+        pageTracker._trackPageview();
+      } catch(err) {}
+    </script>
+  </body>
 </html>
