@@ -1,0 +1,68 @@
+*, body, html {
+  margin: 0;
+  padding: 0;
+  font-family: Helvetica,Arial,sans-serif;
+}
+
+.clear {
+  clear: both;
+}
+
+.box {
+  position: absolute;
+  z-index: 2;
+  border: 2px solid #5C9A5D;
+  background-color: #FFF;
+  color: #258215;
+  padding: 5px;
+  width: 300px;
+  bottom: 5px;
+  height: 105px;
+}
+
+#info {
+  left: 5px;
+}
+
+.box a {
+  color: #258215;
+  text-decoration: none;
+  border-bottom: 1px dotted #258215;
+  font-weight: bold;
+}
+
+a#wonsys {
+  position: absolute;
+  display: block;
+  bottom: 100px;
+  left: 238px;
+  text-align: right;
+  font-size: 10px;
+}
+
+h1, p {
+  display: block;
+  margin: 2 auto;
+  width: 300px;
+  text-align: center;
+  font-size: 14px;
+}
+
+h1 {
+  display: none;
+}
+
+a#logo {
+  display: block;
+  width: 240px;
+  height: 80px;
+  margin: 5px auto;
+  border: 0;
+}
+
+a#logo img {
+  display: block;
+  width: 240px;
+  height: 80px;
+  border: 0;
+}

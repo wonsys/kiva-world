@@ -10,7 +10,7 @@ module Kiva
         JSON.parse(data)
       rescue OpenURI::HTTPError => e
         puts "ERROR: #{e}"
-        exit(1)
+        exit(1) unless $0 == 'irb'
       end
     end # Fetcher (self)
   end # Fetcher

@@ -1,13 +1,40 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>KivaWorld - Kiva in the world</title>
-    <script src="http://ajax.googleapis.com/ajax/libs/prototype/1.6.0.3/prototype.js" type="text/javascript"></script>
-    
+    <title>KivaPeople - People who helps others to achieve their dreams</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <style type="text/css" media="all">
+      @import url('kiva_people.css');
+    </style>
+    <script src="http://www.google.com/jsapi?key=ABQIAAAAdF3Z4Y2-c9myQDFWbid1ORSI5xQXRf0uWovlDekgACrwxp4OWhR4tibiINrpBZcnA-5Upqihn7hczQ"></script>
+    <script type="text/javascript" charset="utf-8">
+      var data = <%= lenders.to_json %>;
+      google.load('jquery', '1.3.2');
+      google.setOnLoadCallback(function(){
+        $(document).ready(function(){
+          // $('.box').corners("15px");
+          initialize(data);
+        });
+      });
+    </script>
+    <script type="text/javascript" src="kiva_map.js"></script>
   </head>
   <body>
-    <%= loans.inspect %>
+    <div id="info" class="box"><!--O info-->
+      <a href="http://wonsys.net" title="Wonsys S.r.l. Home page" target="_blank" id="wonsys">Wonsys S.r.l.</a>
+      <a href="http://www.kiva.org" title="Kiva.org Home page" target="_blank" id="logo"><img src="kiva_people.png" alt="Kiva" /></a>
+      <h1>Kiva People</h1>
+      <p>Please visit and contribute to <a href="http://www.kiva.org" title="Kiva.org Home page" target="_blank">Kiva.org</a></p>
+    </div><!--C info-->
+
+
+    <script type="text/javascript">
+      var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+      document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+      try {
+        var pageTracker = _gat._getTracker("UA-563229-7");
+        pageTracker._trackPageview();
+      } catch(err) {}
+    </script>
   </body>
 </html>
