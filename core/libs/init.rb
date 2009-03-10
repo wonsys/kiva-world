@@ -1,0 +1,6 @@
+require File.join(Kiva::Core.path(:libs), 'nil_class')
+require File.join(Kiva::Core.path(:libs), 'array')
+require File.join(Kiva::Core.path(:libs), 'hash')
+require File.join(Kiva::Core.path(:libs), 'string')
+require File.join(Kiva::Core.path(:libs), 'date')
+require File.join(Kiva::Core.path(:libs), 'time')

@@ -1,16 +1,17 @@
 module Kiva
-  class Lender
+  class Lender < Kiva::Resource
     include DataMapper::Resource
-
-    property :uid, String, :key => true
-    property :lender_id, String
-    property :name, String
+    
+    # Properties
+    property :uid, String, :key => true, :length => 255
+    property :lender_id, String, :length => 255
+    property :name, String, :length => 255
     property :loan_because, Text, :lazy => false
     property :whereabouts, Text, :lazy => false
-    property :country_code, String
-    property :occupation, String
+    property :country_code, String, :length => 255
+    property :occupation, String, :length => 255
     property :occupational_info, Text, :lazy => false
-    property :personal_url, String
+    property :personal_url, String, :length => 255
     property :loan_count, Integer
     property :invitee_count, Integer
     property :image_template_id, String
@@ -18,6 +19,9 @@ module Kiva
     property :member_since, DateTime
     property :created_at, DateTime
     property :updated_at, DateTime
+    
+    # Associations
+    has n, :loans, :class_name => 'Kiva::Loan'
 
     class << self
       public # PUBLIC class methods
@@ -25,39 +29,93 @@ module Kiva
       def get_random(limit=100)
         rand(limit)
       end
-
+      
+      # If force is true forces fetching of all objects (creates the new ones and tries to updates the old ones)
+      def update_all!(force=false)
+        import!
+        Kiva::Lender.all.each do |lender|
+          update_resource(:lenders, :lender, 'uid', force, nil, lender.uid)
+        end
+      end
+      
       private # PRIVATE class methods
-
+      
+      def import!
+        Kiva::Loan.all.each do |loan|
+          update_resource(:lenders, :lenders, 'uid', false, nil, loan.id)
+        end
+      end
+      
       def rand(limit=100)
         self.find_by_sql("SELECT * FROM kiva_lenders ORDER BY RAND() LIMIT #{limit}")
       end
     end # Lender (self)
 
     public # PUBLIC instance methods
-
+    
+    def because
+      self.loan_because.blank? ? '' : (self.loan_because[0].chr.downcase + self.loan_because[1..-1])
+    end
+    
+    def from
+      self.member_since.formatted(:international => :it, :months => :long, :separator => ' ')
+    end
+    
     def image=(info)
       self.image_template_id = info['template_id']
       self.image_id = info['id']
     end
-
-    def to_hash
-      {:uid           => self.uid,
-       :lender_id     => self.lender_id,
-       :name          => self.name,
-       :loan_because  => self.loan_because,
-       :whereabouts   => self.whereabouts,
-       :country_code  => self.country_code,
-       :occupation    => self.occupation,
-       :occupational_info => self.occupational_info,
-       :personal_url  => self.personal_url,
-       :loan_count    => self.loan_count,
-       :invitee_count => self.invitee_count,
-       :image         => {:id => self.image_id, :template_id => self.image_template_id},
-       :member_since  => self.member_since}
+    
+    def image_url
+      "http://kiva.org/img/w180h180/#{self.image_id}.jpg"
     end
-
-    def to_json
-      self.to_hash.to_json
+    
+    def job
+      self.occupational_info.blank? ? "I am a #{self.occupation.downcase}" : self.occupational_info
+    end
+    
+    def personal_url=(url)
+      attribute_set(:personal_url, ((/\Ahttp:\/\// === url) ? url : "http://#{url}"))
+    end
+    
+    def to_hash(original=false)
+      if original
+        {:uid           => self.uid,
+         :lender_id     => self.lender_id,
+         :name          => self.name,
+         :loan_because  => self.loan_because,
+         :whereabouts   => self.whereabouts,
+         :country_code  => self.country_code,
+         :occupation    => self.occupation,
+         :occupational_info => self.occupational_info,
+         :personal_url  => self.personal_url,
+         :loan_count    => self.loan_count,
+         :invitee_count => self.invitee_count,
+         :image         => {:id => self.image_id, :template_id => self.image_template_id},
+         :member_since  => self.member_since}
+      else
+        {:name          => self.name,
+         :because           => self.because,
+         :where         => self.where,
+         :from          => self.from,
+         :job           => self.job,
+         :image_url     => self.image_url,
+         :personal_url  => self.personal_url,
+         :loan_count    => self.loan_count,
+         :url           => self.url}
+      end
+    end
+    
+    def to_json(original=false)
+      self.to_hash(original).to_json
+    end
+    
+    def url
+      "http://www.kiva.org/lender/#{lender_id}"
+    end
+    
+    def where
+      self.country_code.blank? ? self.whereabouts : "#{self.whereabouts} (#{self.country_code})"
     end
   end # Lender
 end # Kiva

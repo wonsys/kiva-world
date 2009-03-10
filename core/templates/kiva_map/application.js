@@ -63,7 +63,7 @@ function addMarkers(type, points) {
     var marker = new GMarker(point, icon);
     $$map.addOverlay(marker);
     $$markers[type].push(marker);
-    GEvent.addListener(marker, 'click', function() { marker.openInfoWindowHtml('<ul class="loans">' + item[2] + '</ul>'); });
+    GEvent.addListener(marker, 'click', function() { marker.openInfoWindowHtml('<ul class="loans">' + item[2] + '<div class="clear"></div></ul>'); });
     marker.hide();
   });
 }

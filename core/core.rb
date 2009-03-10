@@ -1,7 +1,6 @@
-require 'rubygems'
-require 'fileutils'
-
 module Kiva
+  API_URL = 'http://api.kivaws.org/v1'
+  
   module Core
     DEBUG = true
     DIR   = File.expand_path(File.dirname(__FILE__))
@@ -15,20 +14,43 @@ module Kiva
         when :core then DIR
         when :templates then File.join(DIR, 'templates')
         when :models    then File.join(DIR, 'models')
+        when :libs      then File.join(DIR, 'libs')
         when :kiva_map, :kiva_people
           File.join(ROOT, "#{type}", 'public')
         end
+      end
+      
+      def url_for(what, page=nil, id=nil)
+        url = case what
+        when :all_loans     then "#{Kiva::API_URL}/loans/search.json?sort_by=newest"
+        when :all_partners  then "#{Kiva::API_URL}/partners.json"
+        when :lenders       then "#{Kiva::API_URL}/loans/#{id}/lenders.json"
+        when :lender        then "#{Kiva::API_URL}/lenders/#{id}.json"
+        when :loan          then "#{Kiva::API_URL}/loans/#{id}.json"
+        end
+        page ? (url.index('?') ? "#{url}&page=#{page}" : "#{url}?page=#{page}") : url
+      end
+      
+      def url_info(what, id=nil)
+        raise "Error: WRONG type (#{what})" unless(url = url_for(what, nil, id))
+        raise "Error: WRONG url (#{url})" unless(data = Kiva::Fetcher.load(url))
+        paging = data['paging']
+        info = paging ? {:url => url, :size => paging['total'], :page_size => paging['page_size'], :pages => paging['pages']} : {:url => url, :size => 1, :page_size => 1, :pages => 1}
+        info['data'] = data if(info[:pages] == 1)
+        info
       end
     end # Core (self)
   end # Core
 end # Kiva
 
+require File.join(Kiva::Core.path(:libs), 'init')
+require 'rubygems'
+require 'fileutils'
 require File.join(Kiva::Core.path(:core), 'fetcher')
 require File.join(Kiva::Core.path(:core), 'templater')
 require File.join(Kiva::Core.path(:models), 'init')
 
 module Kiva
-  API_URL = 'http://api.kivaws.org/v1'
   
   class << self
     public # PUBLIC class methods
@@ -46,30 +68,7 @@ module Kiva
           data += query[type_to_s]
         end
         data
-      when :lenders
-        # updates loans
-        query = Kiva::Fetcher.load(url(:loans, :all))
-        loans = query[type_to_s]
-        pages = query['paging']['pages']
-        2.upto(pages) do |page|
-          query = Kiva::Fetcher.load(url(:loans, :all, page))
-          loans += query[type_to_s]
-        end
-        loans = Kiva::Loan.update_loans!(loans)
-
-        # update lenders
-        loans.each do |loan|
-          query = Kiva::Fetcher.load(url(:loans, loan.id))
-          lenders = query[type_to_s]
-          pages = query['paging']['pages']
-          2.upto(pages) do |page|
-            query = Kiva::Fetcher.load(url(:loans, loan.id, page))
-            lenders += query[type_to_s]
-          end
-
-          Kiva::Lender.update_lenders!(lenders, loan.id)
-        end
-
+      when :all then Kiva::Loan.update_all!
       end
     end
 
@@ -108,7 +107,7 @@ module Kiva
       puts "#{type} regenerated!" if Kiva::Core::DEBUG
 
     rescue => e
-      puts "An error occour when regeneriting #{type}: #{e}"
+      puts "An error occour when regenerating #{type}: #{e}"
       exit(1) unless $0 == 'irb'
     end
     
@@ -138,4 +137,5 @@ end # Kiva
 unless $0 == 'irb' # test mode
   Kiva.regenerate!(:kiva_map)
   Kiva.regenerate!(:kiva_people)
+  # Kiva.fetch(:lenders)
 end
