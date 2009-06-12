@@ -26,13 +26,20 @@ module Kiva
       
       # If force is true forces fetching of all objects (creates the new ones and tries to updates the old ones)
       def update_all!(force=false)
-        update_resource(:partners, :all_partners, 'id', force, ['countries']) do |partner, countries|
-          if countries.any?
-            partner_countries = partner.countries
-            partner_countries.destroy! if partner_countries.any?
-            countries.each { |country| partner.countries << partner.countries.build(country)}
-          end
+        update_resources(:partners, :all_partners, 'id', force, ['countries'])
+      end
+      
+      def find_countries
+        countries = []
+        values    = []
+        repository(:default).adapter.query("SELECT kiva_countries.iso_code AS country, COUNT(*) AS value FROM kiva_countries
+                                            WHERE kiva_countries.iso_code IS NOT NULL AND kiva_countries.iso_code <> ''
+                                            GROUP BY kiva_countries.iso_code
+                                            ORDER BY value DESC").each do |loan|
+          countries << loan.country
+          values    << loan.value
         end
+        return countries, values
       end
     end # Partner (self)
     

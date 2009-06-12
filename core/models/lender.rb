@@ -21,7 +21,7 @@ module Kiva
     property :updated_at, DateTime
     
     # Associations
-    has n, :loans, :class_name => 'Kiva::Loan'
+    # has n, :loans, :class_name => 'Kiva::Loan'
 
     class << self
       public # PUBLIC class methods
@@ -34,7 +34,7 @@ module Kiva
       def update_all!(force=false)
         import!
         Kiva::Lender.all.each do |lender|
-          update_resource(:lenders, :lender, 'uid', force, nil, lender.uid)
+          update_resources(:lenders, :lender, 'uid', force, nil, lender.uid)
         end
       end
       
@@ -42,7 +42,7 @@ module Kiva
       
       def import!
         Kiva::Loan.all.each do |loan|
-          update_resource(:lenders, :lenders, 'uid', false, nil, loan.id)
+          update_resources(:lenders, :lenders, 'uid', false, nil, loan.id)
         end
       end
       

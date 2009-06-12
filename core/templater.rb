@@ -18,14 +18,14 @@ module Kiva
       @type  = type.to_s
       @page  = Erubis::Eruby.new(File.read(path('index.erb.html'))).result(params.merge(:this => self))
       @files = {:text => [{:name => 'index.html',   :content => @page},
-                                {:name => "#{@type}.css", :content => generate_css_file},
-                                {:name => "#{@type}.js",  :content => generate_js_file}],
+                          {:name => "#{@type}.css", :content => generate_css_file},
+                          {:name => "#{@type}.js",  :content => generate_js_file}],
                 :binary => path('assets')}
     end
 
     private # PRIVATE instance methods
     
-    def generate_file(ext='css')
+    def generate_file(ext)
       merged = ''
       Dir.glob(File.join(path, "*.#{ext}")).each do |file|
         merged << "/* === #{File.basename(file)} === */\n\n"

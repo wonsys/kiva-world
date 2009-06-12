@@ -5,7 +5,7 @@ module Kiva
     DEBUG = true
     DIR   = File.expand_path(File.dirname(__FILE__))
     ROOT  = File.expand_path(File.join(DIR, '..'))
-
+    
     class << self
       public # PUBLIC class methods
       def path(type=:root)
@@ -15,7 +15,7 @@ module Kiva
         when :templates then File.join(DIR, 'templates')
         when :models    then File.join(DIR, 'models')
         when :libs      then File.join(DIR, 'libs')
-        when :kiva_map, :kiva_people
+        when :kiva_map, :kiva_people, :kiva_stats
           File.join(ROOT, "#{type}", 'public')
         end
       end
@@ -35,9 +35,14 @@ module Kiva
         raise "Error: WRONG type (#{what})" unless(url = url_for(what, nil, id))
         raise "Error: WRONG url (#{url})" unless(data = Kiva::Fetcher.load(url))
         paging = data['paging']
-        info = paging ? {:url => url, :size => paging['total'], :page_size => paging['page_size'], :pages => paging['pages']} : {:url => url, :size => 1, :page_size => 1, :pages => 1}
-        info['data'] = data if(info[:pages] == 1)
+        pages = paging ? paging['pages'] : 1
+        puts "Total pages found for #{what}: #{pages}" if Kiva::Core::DEBUG
+        info = paging ? {:url => url, :size => paging['total'], :page_size => paging['page_size'], :pages => pages} : {:url => url, :size => 1, :page_size => 1, :pages => pages}
+        info[:data] = data if pages == 1
         info
+      rescue => e
+        puts "WARNING: #{e}"
+        nil
       end
     end # Core (self)
   end # Core
@@ -74,6 +79,7 @@ module Kiva
 
     # Regenerates files
     def regenerate!(type, all=false)
+      params = {}
       case type
       when :kiva_map
         params = {:loans => { 'fundraising'  => Kiva.fetch(:loans, :fundraising),
@@ -107,7 +113,7 @@ module Kiva
       puts "#{type} regenerated!" if Kiva::Core::DEBUG
 
     rescue => e
-      puts "An error occour when regenerating #{type}: #{e}"
+      puts "An error occour when regenerating #{type}: #{e}\n#{e.backtrace.join("\n")}"
       exit(1) unless $0 == 'irb'
     end
     
@@ -136,6 +142,6 @@ end # Kiva
 
 unless $0 == 'irb' # test mode
   Kiva.regenerate!(:kiva_map)
-  Kiva.regenerate!(:kiva_people)
+  # Kiva.regenerate!(:kiva_people)
   # Kiva.fetch(:lenders)
 end

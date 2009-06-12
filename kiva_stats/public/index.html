@@ -23,52 +23,16 @@
       <div id="main"><!--O main-->
         <div class="clear"></div><!-- CLEAR -->
 
-        <%- 
-          countries, values = Kiva::Loan.find_countries
-          max    = values.max
-          values = values.map {|v| v*100 / max}
-          params = ['chs=440x220',
-                    '&chf=bg,s,EAF7FE',
-                    "&chd=t:#{values.serialize(',')}",
-                    '&cht=t',
-                    '&chtm=world',
-                    "&chld=#{countries.serialize('')}",
-                    '&chco=FFFFFF,8888FF,88FF88,FFFF88,FF8888']
-          url = "http://chart.apis.google.com/chart?#{params.serialize('&')}"
-        -%>
         <h2>Loan distribution</h2>
-        <img src="<%= url %>" alt="Loan distribution" />
+        <img src="http://chart.apis.google.com/chart?chs=440x220&&chf=bg,s,EAF7FE&&chd=t:100,96,47,39,38,37,28,25,20,18,15,14,13,13,12,12,9,8,8,7,7,7,6,5,5,3,3,2,2,2,2,2,2,2,2,2,2,1,0,0,0&&cht=t&&chtm=world&&chld=PEKHTJNIGHPHNGTZTGBOVNPKUGLBMXAZWSBJPYMLUASNSDDOAFKEMDSVNPGTHNIDSLRWMZMNCMCDBAPSCR&&chco=FFFFFF,8888FF,88FF88,FFFF88,FF8888" alt="Loan distribution" />
         <div class="clear"></div><!-- CLEAR -->
 
-        <%- 
-          countries, values = Kiva::Partner.find_countries
-          max    = values.max
-          values = values.map {|v| v*100 / max}
-          params = ['chs=440x220',
-                    '&chf=bg,s,EAF7FE',
-                    "&chd=t:#{values.serialize(',')}",
-                    '&cht=t',
-                    '&chtm=world',
-                    "&chld=#{countries.serialize('')}",
-                    '&chco=FFFFFF,8888FF,88FF88,FFFF88,FF8888']
-          url = "http://chart.apis.google.com/chart?#{params.serialize('&')}"
-        -%>
         <h2>Partner distribution</h2>
-        <img src="<%= url %>" alt="Partner counter" />
+        <img src="http://chart.apis.google.com/chart?chs=440x220&&chf=bg,s,EAF7FE&&chd=t:100,70,60,50,50,50,40,40,40,40,40,30,30,30,30,30,30,30,20,20,20,20,20,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10&&cht=t&&chtm=world&&chld=KEUGNIPHTZPEKHBOVNTGGHIDGTMXAZSNTJHNMZDONGLBBGAFECSLMLWSCMPYUATHBASVSDMDCIPSBJHTMNCRRWCDPKIQNPTD&&chco=FFFFFF,8888FF,88FF88,FFFF88,FF8888" alt="Partner counter" />
         <div class="clear"></div><!-- CLEAR -->
         
-        <%- 
-          labels, values = Kiva::Loan.find_status
-          total  = values.inject(0) {|sum, v| sum += v}
-          values = values.map {|v| v*100/total}
-          params = ['chs=440x220',
-                    "&chl=#{labels.serialize('|')}",
-                    "&chd=t:#{values.serialize(',')}",
-                    '&cht=p']
-          url = "http://chart.apis.google.com/chart?#{params.serialize('&')}"
-        -%>
         <h2>Loan Status</h2>
-        <img src="<%= url %>" alt="Partner counter" />
+        <img src="http://chart.apis.google.com/chart?chs=440x220&&chl=In repayment|Funded|Paid|Fundraising&&chd=t:95,2,1,0&&cht=p" alt="Partner counter" />
         <div class="clear"></div><!-- CLEAR -->
       </div><!--C main-->
       <div class="clear"></div><!-- CLEAR -->
