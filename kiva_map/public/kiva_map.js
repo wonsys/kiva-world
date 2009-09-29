@@ -65,7 +65,7 @@ function addMarkers(type, points) {
     var marker = new GMarker(point, icon);
     $$map.addOverlay(marker);
     $$markers[type].push(marker);
-    GEvent.addListener(marker, 'click', function() { marker.openInfoWindowHtml('<ul class="loans">' + item[2] + '</ul>'); });
+    GEvent.addListener(marker, 'click', function() { marker.openInfoWindowHtml('<ul class="loans">' + item[2] + '<div class="clear"></div></ul><div class="clear"></div>'); });
     marker.hide();
   });
 }
@@ -77,7 +77,7 @@ function getLoanLatLng(loan) {
 function createContentForSingleLoan(data) {
   out =  '<li>';
   out += '  <img src="http://kiva.org/img/w80h80/' + data['image']['id'] + '.jpg"/>';
-  out += '  <p class="name"><a href="http://kiva.org/app.php?page=businesses&action=about&id=' + data['id'] + '" target="_blank">' + data['name'] + '</a> &middot; <strong>$' + data['funded_amount'] + '</strong> of <strong>$' + data['loan_amount'] + '</strong></p>';
+  out += '  <p class="name"><a href="http://kiva.org/app.php?page=businesses&action=about&id=' + data['id'] + '&app_id=com.kivaworld" target="_blank">' + data['name'] + '</a> &middot; <strong>$' + data['funded_amount'] + '</strong> of <strong>$' + data['loan_amount'] + '</strong></p>';
   out += '  <p class="activity">' + data['activity'] + ' (' + data['sector'] + ')</p>';
   out += '  <p class="use">' + data['use'] + '</p>';
   out += '  <div class="clear"></div>';
