@@ -130,20 +130,21 @@ span#close-quote {
 #lender-info div.info-left {
   float: left;
   width: 150px;
-  min-height: 160px;
+  min-height: 180px;
   margin: 20px 10px 20px 20px;
 }
 
 #lender-info div.info-right {
   float: left;
   width: 490px;
-  min-height: 160px;
+  min-height: 180px;
   margin: 20px 20px 20px 10px;
 }
 
 div.info-left img {
   display: block;
-  width: 140px;
+  max-width: 140px;
+  max-height: 160px;
   margin: auto;
 }
 
@@ -198,4 +199,16 @@ ul#nav li a {
   width: 10px;
   height: 10px;
   background: url(play.gif) no-repeat top left;
+}
+
+#spinner {
+  width: 100%;
+  margin-top: 90px;
+}
+
+#spinner img {
+  margin: auto;
+  display: block;
+  width: 40px;
+  height: 40px;
 }

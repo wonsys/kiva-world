@@ -67,15 +67,17 @@ module Kiva
     end
     
     def image_url
-      "http://kiva.org/img/w180h180/#{self.image_id}.jpg"
+      id = self.image_id || 0
+      "http://kiva.org/img/w180h180/#{id}.jpg"
     end
     
     def job
-      self.occupational_info.blank? ? "I am a #{self.occupation.downcase}" : self.occupational_info
+      self.occupational_info.blank? ? (self.occupation.blank? ? '' : "I am a #{self.occupation.downcase}") : self.occupational_info
     end
     
-    def personal_url=(url)
-      attribute_set(:personal_url, ((/\Ahttp:\/\// === url) ? url : "http://#{url}"))
+    def personal_url=(original_url)
+      url = original_url.blank? ? '' : ((/\Ahttp:\/\// === url) ? url : "http://#{url}")
+      attribute_set(:personal_url, url)
     end
     
     def to_hash(original=false)
@@ -95,7 +97,7 @@ module Kiva
          :member_since  => self.member_since}
       else
         {:name          => self.name,
-         :because           => self.because,
+         :because       => self.because,
          :where         => self.where,
          :from          => self.from,
          :job           => self.job,
@@ -115,7 +117,15 @@ module Kiva
     end
     
     def where
-      self.country_code.blank? ? self.whereabouts : "#{self.whereabouts} (#{self.country_code})"
+      if self.country_code.blank? && self.whereabouts.blank?
+        ''
+      elsif self.country_code.blank?
+        self.whereabouts
+      elsif self.whereabouts.blank?
+        self.country_code
+      else
+        "#{self.whereabouts} (#{self.country_code})"
+      end
     end
   end # Lender
 end # Kiva

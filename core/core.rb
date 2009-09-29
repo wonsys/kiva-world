@@ -28,7 +28,8 @@ module Kiva
         when :lender        then "#{Kiva::API_URL}/lenders/#{id}.json"
         when :loan          then "#{Kiva::API_URL}/loans/#{id}.json"
         end
-        page ? (url.index('?') ? "#{url}&page=#{page}" : "#{url}?page=#{page}") : url
+        url = page ? (url.index('?') ? "#{url}&page=#{page}" : "#{url}?page=#{page}") : url
+        url.index('?') ? "#{url}&id=com.kivaworld" : "#{url}?id=com.kivaworld"
       end
       
       def url_info(what, id=nil)
@@ -135,13 +136,14 @@ module Kiva
         end
 
       end
-      "#{url_base}/#{url_path}"
+      url = "#{url_base}/#{url_path}"
+      url.index('?') ? "#{url}&id=com.kivaworld" : "#{url}?id=com.kivaworld"
     end
   end # Kiva (self)
 end # Kiva
 
 unless $0 == 'irb' # test mode
   Kiva.regenerate!(:kiva_map)
-  # Kiva.regenerate!(:kiva_people)
+  # Kiva.regenerate!(:kiva_people, true)
   # Kiva.fetch(:lenders)
 end

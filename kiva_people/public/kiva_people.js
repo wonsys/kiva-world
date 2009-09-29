@@ -37,10 +37,46 @@ function previousLender() {
 }
 
 function showLender(content) {
-  $('#lender-info').fadeOut('slow', function(){
-    $('#lender-info').html(content);
-    $('#lender-info').fadeIn('slow');
-  });
+  // $('#lender-info').fadeOut('slow', function(){
+    // $('#lender-info').queue(function () {
+      // $(this).html(content);
+      // centerElement('.info-left', '#lender-info');
+      // centerElement('.info', '.info-right');
+      // $(this).dequeue();
+    // });
+    // $('#lender-info').queue(function () {
+      // centerElement('.info-left', '#lender-info');
+      // centerElement('.info', '.info-right');
+      // $(this).dequeue();
+    // });
+    // centerElement('.info', '.info-right');
+    // $('#lender-info').fadeIn('slow');
+  // });
+  $('#lender-info').fadeOut('slow', function() {
+    showSpinner(function(){
+      $('#lender-info').queue(function (){
+        $(this).html(content);
+        // alert($('.info-right').height());
+        setTimeout(function(){
+          $('#lender-info').dequeue();
+          // alert($('.info-right').height());
+          hideSpinner(function(){
+            $('#lender-info').fadeIn('slow');
+            centerElement('.info', '.info-right');
+            centerElement('.info-left img', '.info-left');
+          });
+        }, 2000 );
+      });
+    });
+  })
+}
+
+function showSpinner(callback) {
+  $('#spinner').fadeIn('slow', callback);
+}
+
+function hideSpinner(callback) {
+  $('#spinner').fadeOut('slow', callback);
 }
 
 function play_or_pause() {
@@ -53,7 +89,7 @@ function play_or_pause() {
 
 function play() {
   $$play = true;
-  $('#lender').everyTime(2000, function(i){
+  $('#lender').everyTime(7000, function(i){
     nextLender();
   }, 0)
 }
@@ -63,23 +99,35 @@ function pause() {
   $("#lender").stopTime();
 }
 
-function centerElementOnBrowser(element) {
-  browser_width  = browserWidth();
-  browser_height = browserHeight();
-  // $('body').height(browser_height);
-  // $('body').width(browser_width);
+function center(element_size, container_size) {
+  var difference = container_size - element_size;
+  if (difference > 0) {
+    return parseInt((difference / 2) - (difference*0.1));
+  } else {
+    return 0;
+  };
+}
 
+function centerElement(element, container) {
+  container_height = $(container).height();
+  // alert(container+' - '+container_height);
+  element_height   = $(element).height();
+  // alert(element+' - '+element_height);
+  $(element).css('margin-top', (center(element_height, container_height) + 'px'));
+}
+
+function centerElementOnBrowser(element) {
+  // browser_width  = browserWidth();
+  browser_height = browserHeight();
   element_height = $(element).height();
-  difference = browser_height - element_height
-  margin_top = parseInt((difference / 2) - (difference*0.1))
-  $(element).css('margin-top', (margin_top + 'px'));  
+  $(element).css('margin-top', (center(element_height, browser_height) + 'px'));
 }
 
 function browserHeight() {
   if(window.innerHeight) {
     return window.innerHeight;
   } else {
-    return document.documentElement.clientHeight
+    return document.documentElement.clientHeight;
   }
 }
 
@@ -87,7 +135,7 @@ function browserWidth() {
   if(window.innerWidth) {
     return window.innerWidth;
   } else {
-    return document.documentElement.clientWidth
+    return document.documentElement.clientWidth;
   }
 }
 
@@ -100,21 +148,22 @@ function createContentForSingleLender(lender) {
   out += '  <p class="name">';
   out += "   I'm " + '<a href="' + lender['url'] + '" title="' + lender['name'] + ' on Kiva.org" target="_blank">' + lender['name'] + '</a>';
   if(lender['where'] != '') {
-    out += ' from ' + lender['where']
-  }
+    out += ' from ' + lender['where'];
+  };
   if(lender['personal_url'] != '') {
-    out += '&middot; <span class="url"><a href="' + lender['personal_url'] + '" title="' + lender['name'] + ' personal url" target="_blank">' + lender['personal_url'] + '</a></span>'
-  }
+    out += ' &middot; <span class="url"><a href="' + lender['personal_url'] + '" title="' + lender['name'] + ' personal url" target="_blank">' + lender['personal_url'] + '</a></span>';
+  };
   out += '  </p>';
   if(lender['job'] != '') {
-    out += '<p class="job">' + lender['job'] + '</p>'
-  }
+    out += '<p class="job">' + lender['job'] + '</p>';
+  };
   out += '  <p class="loans">';
   out += "   I've helped " + '<span class="green">' + lender['loan_count'] + '</span> friends to achieve their dreams from <span class="green">' + lender['from'] + '</span>';
   out += '  </p>';
   if(lender['because'] != '') {
-    out += '<p class="why">I do it because... ' + lender['because'] + '</p>'
-  }
+    out += '<p class="why">I do it because... ' + lender['because'] + '</p>';
+  };
+  out += '</div>';
   return out;
 }
 

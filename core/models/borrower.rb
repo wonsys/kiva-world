@@ -12,6 +12,6 @@ module Kiva
     property :updated_at,  DateTime
     
     # Associations
-    belongs_to :loan, :class_name => 'Kiva::Loan'
+    belongs_to :loan, :class_name => 'Kiva::Loan', :child_key => [:loan_id]
   end # Borrower
 end # Kiva

@@ -16,7 +16,7 @@ module Kiva
     property :updated_at, DateTime
     
     # Associations
-    belongs_to :partners, :class_name => 'Kiva::Partner'
+    belongs_to :partners, :class_name => 'Kiva::Partner', :child_key => [:partner_id]
     
     public # PUBLIC instance methods
     

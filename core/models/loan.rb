@@ -50,7 +50,7 @@ module Kiva
     # ["status", "name", "journal_totals", "paid_date", "payments", "posted_date", "activity", "id", "borrowers", "description", "terms", "partner_id", "use", "funded_amount", "funded_date", "image", "location", "sector"]
     
     # Associations
-    belongs_to  :partner,             :class_name => 'Kiva::Partner'
+    belongs_to  :partner,             :class_name => 'Kiva::Partner', :child_key => [:partner_id]
     has n,      :payments,            :class_name => 'Kiva::Payment'
     has n,      :borrowers,           :class_name => 'Kiva::Borrower'
     has n,      :descriptions,        :class_name => 'Kiva::Description'
