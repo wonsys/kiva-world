@@ -29,7 +29,7 @@ module Kiva
         when :loan          then "#{Kiva::API_URL}/loans/#{id}.json"
         end
         url = page ? (url.index('?') ? "#{url}&page=#{page}" : "#{url}?page=#{page}") : url
-        url.index('?') ? "#{url}&id=com.kivaworld" : "#{url}?id=com.kivaworld"
+        url.index('?') ? "#{url}&app_id=com.kivaworld" : "#{url}?app_id=com.kivaworld"
       end
       
       def url_info(what, id=nil)
@@ -137,7 +137,7 @@ module Kiva
 
       end
       url = "#{url_base}/#{url_path}"
-      url.index('?') ? "#{url}&id=com.kivaworld" : "#{url}?id=com.kivaworld"
+      url.index('?') ? "#{url}&app_id=com.kivaworld" : "#{url}?app_id=com.kivaworld"
     end
   end # Kiva (self)
 end # Kiva
